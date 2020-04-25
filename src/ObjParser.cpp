@@ -166,13 +166,13 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
             glm::vec3 b;
             glm::vec3 c;
 
-            if (numbers[i + 0] < 0)
+            if (numbers[0] < 0)
             {
-                a = vertices[vertices.size() + numbers[i + 0]];
+                a = vertices[vertices.size() + numbers[0]];
             }
             else
             {
-                a = vertices[numbers[i + 0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                a = vertices[numbers[0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
             }
 
             if (numbers[i + 1] < 0)
@@ -219,13 +219,13 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
                 glm::vec3 normalC;
 
                 // VERTICES
-                if (numbers[i + 0].first < 0)
+                if (numbers[0].first < 0)
                 {
-                    a = vertices[vertices.size() + numbers[i + 0].first];
+                    a = vertices[vertices.size() + numbers[0].first];
                 }
                 else
                 {
-                    a = vertices[numbers[i + 0].first - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    a = vertices[numbers[0].first - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1].first < 0)
@@ -248,13 +248,13 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
 
 
                 // NORMALS
-                if (numbers[i + 0].second < 0)
+                if (numbers[0].second < 0)
                 {
-                    normalA = vertexNormals[vertexNormals.size() + numbers[i + 0].second];
+                    normalA = vertexNormals[vertexNormals.size() + numbers[0].second];
                 }
                 else
                 {
-                    normalA = vertexNormals[numbers[i + 0].second - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    normalA = vertexNormals[numbers[0].second - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1].second < 0)
@@ -301,13 +301,13 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
                 glm::vec3 normalC;
 
                 // VERTICES
-                if (numbers[i + 0][0] < 0)
+                if (numbers[0][0] < 0)
                 {
-                    a = vertices[vertices.size() + numbers[i + 0][0]];
+                    a = vertices[vertices.size() + numbers[0][0]];
                 }
                 else
                 {
-                    a = vertices[numbers[i + 0][0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    a = vertices[numbers[0][0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1][0] < 0)
@@ -329,13 +329,13 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
                 }
 
                 // TEXTURES
-                if (numbers[i + 0][1] < 0)
+                if (numbers[0][1] < 0)
                 {
-                    textureA = textureVertices[textureVertices.size() + numbers[i + 0][1]];
+                    textureA = textureVertices[textureVertices.size() + numbers[0][1]];
                 }
                 else
                 {
-                    textureA = textureVertices[numbers[i + 0][1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    textureA = textureVertices[numbers[0][1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1][1] < 0)
@@ -358,13 +358,13 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
 
 
                 // NORMALS
-                if (numbers[i + 0][2] < 0)
+                if (numbers[0][2] < 0)
                 {
-                    normalA = vertexNormals[vertexNormals.size() + numbers[i + 0][2]];
+                    normalA = vertexNormals[vertexNormals.size() + numbers[0][2]];
                 }
                 else
                 {
-                    normalA = vertexNormals[numbers[i + 0][2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    normalA = vertexNormals[numbers[0][2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1][2] < 0)
