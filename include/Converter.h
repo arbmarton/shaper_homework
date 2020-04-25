@@ -3,14 +3,7 @@
 #include "Enums.h"
 #include "Triangle.h"
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
-#include "glm.hpp"
-#pragma warning(pop)
-
-
 #include <string>
-#include <optional>
 #include <filesystem>
 #include <memory>
 
@@ -37,38 +30,12 @@ public:
         return error;
     }
 
-    // Returns nullopt if succesful
-    std::optional<std::string> convert();
-
-    std::vector<glm::vec4>& getVertices()
+    void setError(const std::string& errorStr)
     {
-        return vertices;
+        error = errorStr;
     }
 
-    const std::vector<glm::vec4>& getVertices() const
-    {
-        return vertices;
-    }
-
-    std::vector<glm::vec3>& getTextureVertices()
-    {
-        return textureVertices;
-    }
-
-    const std::vector<glm::vec3>& getTextureVertices() const
-    {
-        return textureVertices;
-    }
-
-    std::vector<glm::vec3>& getVertexNormals()
-    {
-        return vertexNormals;
-    }
-
-    const std::vector<glm::vec3>& getVertexNormals() const
-    {
-        return vertexNormals;
-    }
+    bool convert();
 
     std::vector<Triangle>& getTriangles()
     {
@@ -85,11 +52,6 @@ private:
 
     std::unique_ptr<I_InputParser> parser;
     std::unique_ptr<I_OutWriter> writer;
-
-    // DATA members like points and faces and stuff here
-    std::vector<glm::vec4> vertices;
-    std::vector<glm::vec3> textureVertices;
-    std::vector<glm::vec3> vertexNormals;
 
     std::vector<Triangle> triangles;
 };

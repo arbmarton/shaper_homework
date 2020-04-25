@@ -16,7 +16,7 @@ public:
     I_InputParser(Converter* parentConverter, const std::filesystem::path& input, const SupportedInputFormats format);
     virtual ~I_InputParser() = default;
 
-    virtual std::optional<std::string> parse() = 0;
+    virtual bool parse() = 0;
 
 protected:
     Converter* parentConverter;

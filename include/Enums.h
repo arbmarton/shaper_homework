@@ -4,7 +4,7 @@ namespace shaper {
 
 enum class SupportedInputFormats
 {
-    OBJ
+    OBJ,
 };
 
 enum class SupportedOutputFormats

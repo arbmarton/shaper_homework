@@ -5,6 +5,9 @@
 #include "glm.hpp"
 #pragma warning(pop)
 
+namespace shaper
+{
+
 
 struct Triangle
 {
@@ -23,13 +26,20 @@ struct Triangle
     // Don't know how error-proof it is though...
     glm::vec3 getSurfaceNormal() const
     {
-        const glm::vec3 averageNormal{ (normalA.x + normalB.x + normalC.x) / 3, (normalA.y + normalB.y + normalC.y) / 3, (normalA.z + normalB.z + normalC.z) / 3 };
+        const glm::vec3 averageNormal{ (normalA.x + normalB.x + normalC.x) / 3, (normalA.y + normalB.y + normalC.y) / 3,
+                                       (normalA.z + normalB.z + normalC.z) / 3 };
+
+        // If the normals are nullvectors just return here
+        if (averageNormal == glm::vec3{ 0, 0, 0 })
+        {
+            return glm::vec3{ 0, 0, 0 };
+        }
 
         const glm::vec3 ab = b - a;
         const glm::vec3 ac = c - a;
 
         glm::vec3 normal = glm::cross(ab, ac);
-        if (glm::dot(normal, averageNormal) > 1)
+        if (glm::dot(normal, averageNormal) > 0)  // If the vectors look in the same direction its okay, else flip our calculated normal
         {
             return glm::normalize(normal);
         }
@@ -39,3 +49,5 @@ struct Triangle
         }
     }
 };
+
+}

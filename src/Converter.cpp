@@ -27,16 +27,19 @@ Converter::Converter(
 
 Converter::~Converter() = default;
 
-std::optional<std::string> Converter::convert()
+bool Converter::convert()
 {
-    const auto err = parser->parse();
-    if (err)
+    bool err = parser->parse();
+    if (!err)
     {
-        error = *err;
-        return err;
+        return false;
     }
 
-    writer->write();
+    err = writer->write();
+    if (!err)
+    {
+        return false;
+    }
 
     return {};
 }

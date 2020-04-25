@@ -17,7 +17,7 @@ ObjParser::ObjParser(Converter* parentConverter, const std::filesystem::path& in
 {
 }
 
-std::optional<std::string> ObjParser::parse()
+bool ObjParser::parse()
 {
     const std::vector<std::string> rawLineData{ utilities::readTextFile(inputFile) };
 
@@ -38,34 +38,30 @@ std::optional<std::string> ObjParser::parse()
         const std::string token = splitLine[0];
         if (token == "v")
         {
-            const auto error = parseVertexLine(splitLine);
-            if (error)
+            if (!parseVertexLine(splitLine))
             {
-                return error;
+                return false;
             }
         }
         else if (token == "vt")
         {
-            const auto error = parseTextureVertexLine(splitLine);
-            if (error)
+            if (!parseTextureVertexLine(splitLine))
             {
-                return error;
+                return false;
             }
         }
         else if (token == "vn")
         {
-            const auto error = parseVertexNormalLine(splitLine);
-            if (error)
+            if (!parseVertexNormalLine(splitLine))
             {
-                return error;
+                return false;
             }
         }
         else if (token == "f")
         {
-            const auto error = parseFaceLine(splitLine);
-            if (error)
+            if (!parseFaceLine(splitLine))
             {
-                return error;
+                return false;
             }
         }
         else
@@ -74,14 +70,15 @@ std::optional<std::string> ObjParser::parse()
         }
     }
 
-    return {};
+    return true;
 }
 
-std::optional<std::string> ObjParser::parseVertexLine(const std::vector<std::string>& vec)
+bool ObjParser::parseVertexLine(const std::vector<std::string>& vec)
 {
     if (vec.size() != 4 && vec.size() != 5)
     {
-        return "Vertex data parsing: incorrect line size\n";
+        parentConverter->setError("Vertex data parsing: incorrect line size");
+        return false;
     }
 
     glm::vec4 vertex{ 0, 0, 0, 1.0f };
@@ -94,16 +91,17 @@ std::optional<std::string> ObjParser::parseVertexLine(const std::vector<std::str
         vertex.w = std::stof(vec[4]);
     }
 
-    parentConverter->getVertices().emplace_back(vertex);
+    vertices.emplace_back(vertex);
 
-    return {};
+    return true;
 }
 
-std::optional<std::string> ObjParser::parseTextureVertexLine(const std::vector<std::string>& vec)
+bool ObjParser::parseTextureVertexLine(const std::vector<std::string>& vec)
 {
     if (vec.size() < 2 || vec.size() > 4)
     {
-        return "Vertex texture data parsing: incorrect line size\n";
+        parentConverter->setError("Vertex texture data parsing: incorrect line size");
+        return false;
     }
 
     glm::vec3 textureVertex{ 0, 0, 0 };
@@ -117,16 +115,17 @@ std::optional<std::string> ObjParser::parseTextureVertexLine(const std::vector<s
         textureVertex.z = std::stof(vec[3]);
     }
 
-    parentConverter->getTextureVertices().emplace_back(textureVertex);
+    textureVertices.emplace_back(textureVertex);
 
-    return {};
+    return true;
 }
 
-std::optional<std::string> ObjParser::parseVertexNormalLine(const std::vector<std::string>& vec)
+bool ObjParser::parseVertexNormalLine(const std::vector<std::string>& vec)
 {
     if (vec.size() != 4)
     {
-        return "Vertex normals parsing: incorrect line size\n";
+        parentConverter->setError("Vertex normals parsing: incorrect line size");
+        return false;
     }
 
     glm::vec3 vertexNormal{ 0, 0, 0 };
@@ -135,16 +134,17 @@ std::optional<std::string> ObjParser::parseVertexNormalLine(const std::vector<st
     vertexNormal.y = std::stof(vec[2]);
     vertexNormal.z = std::stof(vec[3]);
 
-    parentConverter->getVertexNormals().emplace_back(vertexNormal);
+    vertexNormals.emplace_back(vertexNormal);
 
-    return {};
+    return true;
 }
 
-std::optional<std::string> ObjParser::parseFaceLine(const std::vector<std::string>& vec)
+bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
 {
     if (vec.size() < 4)
     {
-        return "Face parsing: line is too short\n";
+        parentConverter->setError("Face parsing: line is too short");
+        return false;
     }
 
     std::vector<Triangle> trianglesInFace;
@@ -168,32 +168,32 @@ std::optional<std::string> ObjParser::parseFaceLine(const std::vector<std::strin
 
             if (numbers[i + 0] < 0)
             {
-                a = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 0]];
+                a = vertices[vertices.size() + numbers[i + 0]];
             }
             else
             {
-                a = parentConverter->getVertices()[numbers[i + 0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                a = vertices[numbers[i + 0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
             }
 
             if (numbers[i + 1] < 0)
             {
-                b = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 1]];
+                b = vertices[vertices.size() + numbers[i + 1]];
             }
             else
             {
-                b = parentConverter->getVertices()[numbers[i + 1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                b = vertices[numbers[i + 1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
             }
 
             if (numbers[i + 2] < 0)
             {
-                c = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 2]];
+                c = vertices[vertices.size() + numbers[i + 2]];
             }
             else
             {
-                c = parentConverter->getVertices()[numbers[i + 2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                c = vertices[numbers[i + 2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
             }
 
-            trianglesInFace[i] = { a, b, c, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } ,{ 0, 0, 0 } };
+            trianglesInFace[i] = { a, b, c, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
         }
     }
     else
@@ -201,7 +201,7 @@ std::optional<std::string> ObjParser::parseFaceLine(const std::vector<std::strin
         // Texture coords are missing
         if (utilities::splitString(vec[1], '/')[1] == "")
         {
-            std::vector<std::pair<int, int>> numbers; // vertices and normals
+            std::vector<std::pair<int, int>> numbers;  // vertices and normals
             numbers.reserve(vec.size() - 1);
             for (int i = 1; i < vec.size(); ++i)
             {
@@ -221,66 +221,66 @@ std::optional<std::string> ObjParser::parseFaceLine(const std::vector<std::strin
                 // VERTICES
                 if (numbers[i + 0].first < 0)
                 {
-                    a = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 0].first];
+                    a = vertices[vertices.size() + numbers[i + 0].first];
                 }
                 else
                 {
-                    a = parentConverter->getVertices()[numbers[i + 0].first - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    a = vertices[numbers[i + 0].first - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1].first < 0)
                 {
-                    b = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 1].first];
+                    b = vertices[vertices.size() + numbers[i + 1].first];
                 }
                 else
                 {
-                    b = parentConverter->getVertices()[numbers[i + 1].first - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    b = vertices[numbers[i + 1].first - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 2].first < 0)
                 {
-                    c = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 2].first];
+                    c = vertices[vertices.size() + numbers[i + 2].first];
                 }
                 else
                 {
-                    c = parentConverter->getVertices()[numbers[i + 2].first - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    c = vertices[numbers[i + 2].first - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
 
                 // NORMALS
                 if (numbers[i + 0].second < 0)
                 {
-                    normalA = parentConverter->getVertexNormals()[parentConverter->getVertexNormals().size() + numbers[i + 0].second];
+                    normalA = vertexNormals[vertexNormals.size() + numbers[i + 0].second];
                 }
                 else
                 {
-                    normalA = parentConverter->getVertexNormals()[numbers[i + 0].second - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    normalA = vertexNormals[numbers[i + 0].second - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1].second < 0)
                 {
-                    normalB = parentConverter->getVertexNormals()[parentConverter->getVertexNormals().size() + numbers[i + 1].second];
+                    normalB = vertexNormals[vertexNormals.size() + numbers[i + 1].second];
                 }
                 else
                 {
-                    normalB = parentConverter->getVertexNormals()[numbers[i + 1].second - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    normalB = vertexNormals[numbers[i + 1].second - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 2].second < 0)
                 {
-                    normalC = parentConverter->getVertexNormals()[parentConverter->getVertexNormals().size() + numbers[i + 2].second];
+                    normalC = vertexNormals[vertexNormals.size() + numbers[i + 2].second];
                 }
                 else
                 {
-                    normalC = parentConverter->getVertexNormals()[numbers[i + 2].second - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    normalC = vertexNormals[numbers[i + 2].second - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 trianglesInFace[i] = { a, b, c, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, normalA, normalB, normalC };
             }
         }
-        else // Everything is present
+        else  // Everything is present
         {
-            std::vector<std::array<int, 3>> numbers; // vertices and normals
+            std::vector<std::array<int, 3>> numbers;  // vertices and normals
             numbers.reserve(vec.size() - 1);
             for (int i = 1; i < vec.size(); ++i)
             {
@@ -303,86 +303,86 @@ std::optional<std::string> ObjParser::parseFaceLine(const std::vector<std::strin
                 // VERTICES
                 if (numbers[i + 0][0] < 0)
                 {
-                    a = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 0][0]];
+                    a = vertices[vertices.size() + numbers[i + 0][0]];
                 }
                 else
                 {
-                    a = parentConverter->getVertices()[numbers[i + 0][0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    a = vertices[numbers[i + 0][0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1][0] < 0)
                 {
-                    b = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 1][0]];
+                    b = vertices[vertices.size() + numbers[i + 1][0]];
                 }
                 else
                 {
-                    b = parentConverter->getVertices()[numbers[i + 1][0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    b = vertices[numbers[i + 1][0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 2][0] < 0)
                 {
-                    c = parentConverter->getVertices()[parentConverter->getVertices().size() + numbers[i + 2][0]];
+                    c = vertices[vertices.size() + numbers[i + 2][0]];
                 }
                 else
                 {
-                    c = parentConverter->getVertices()[numbers[i + 2][0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    c = vertices[numbers[i + 2][0] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 // TEXTURES
                 if (numbers[i + 0][1] < 0)
                 {
-                    textureA = parentConverter->getTextureVertices()[parentConverter->getTextureVertices().size() + numbers[i + 0][1]];
+                    textureA = textureVertices[textureVertices.size() + numbers[i + 0][1]];
                 }
                 else
                 {
-                    textureA = parentConverter->getTextureVertices()[numbers[i + 0][1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    textureA = textureVertices[numbers[i + 0][1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1][1] < 0)
                 {
-                    textureB = parentConverter->getTextureVertices()[parentConverter->getTextureVertices().size() + numbers[i + 1][1]];
+                    textureB = textureVertices[textureVertices.size() + numbers[i + 1][1]];
                 }
                 else
                 {
-                    textureB = parentConverter->getTextureVertices()[numbers[i + 1][1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    textureB = textureVertices[numbers[i + 1][1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 2][1] < 0)
                 {
-                    textureC = parentConverter->getTextureVertices()[parentConverter->getTextureVertices().size() + numbers[i + 2][1]];
+                    textureC = textureVertices[textureVertices.size() + numbers[i + 2][1]];
                 }
                 else
                 {
-                    textureC = parentConverter->getTextureVertices()[numbers[i + 2][1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    textureC = textureVertices[numbers[i + 2][1] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
 
                 // NORMALS
                 if (numbers[i + 0][2] < 0)
                 {
-                    normalA = parentConverter->getVertexNormals()[parentConverter->getVertexNormals().size() + numbers[i + 0][2]];
+                    normalA = vertexNormals[vertexNormals.size() + numbers[i + 0][2]];
                 }
                 else
                 {
-                    normalA = parentConverter->getVertexNormals()[numbers[i + 0][2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    normalA = vertexNormals[numbers[i + 0][2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 1][2] < 0)
                 {
-                    normalB = parentConverter->getVertexNormals()[parentConverter->getVertexNormals().size() + numbers[i + 1][2]];
+                    normalB = vertexNormals[vertexNormals.size() + numbers[i + 1][2]];
                 }
                 else
                 {
-                    normalB = parentConverter->getVertexNormals()[numbers[i + 1][2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    normalB = vertexNormals[numbers[i + 1][2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 if (numbers[i + 2][2] < 0)
                 {
-                    normalC = parentConverter->getVertexNormals()[parentConverter->getVertexNormals().size() + numbers[i + 2][2]];
+                    normalC = vertexNormals[vertexNormals.size() + numbers[i + 2][2]];
                 }
                 else
                 {
-                    normalC = parentConverter->getVertexNormals()[numbers[i + 2][2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
+                    normalC = vertexNormals[numbers[i + 2][2] - 1];  // -1 because of the offset in the .obj specification, the counting starts from 1
                 }
 
                 trianglesInFace[i] = { a, b, c, textureA, textureB, textureC, normalA, normalB, normalC };
@@ -395,7 +395,7 @@ std::optional<std::string> ObjParser::parseFaceLine(const std::vector<std::strin
         parentConverter->getTriangles().emplace_back(tr);
     }
 
-    return {};
+    return true;
 }
 
 }  // namespace shaper
