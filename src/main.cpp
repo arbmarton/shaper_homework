@@ -20,6 +20,10 @@ int main(int argc, char** argv)
 
     //shaper::utilities::printStringVector(a);
 
+    auto a = utilities::splitString("4/5/6", '/');
+    auto b = utilities::splitString("4//6", '/');
+    auto c = utilities::splitString("4", '/');
+
 
     Converter conv(SupportedInputFormats::OBJ, utilities::getTestFilePath("nanosuit.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Enums.h"
+#include "Triangle.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4201)
@@ -69,6 +70,16 @@ public:
         return vertexNormals;
     }
 
+    std::vector<Triangle>& getTriangles()
+    {
+        return triangles;
+    }
+
+    const std::vector<Triangle>& getTriangles() const
+    {
+        return triangles;
+    }
+
 private:
     std::string error;
 
@@ -79,6 +90,8 @@ private:
     std::vector<glm::vec4> vertices;
     std::vector<glm::vec3> textureVertices;
     std::vector<glm::vec3> vertexNormals;
+
+    std::vector<Triangle> triangles;
 };
 
 }  // namespace shaper

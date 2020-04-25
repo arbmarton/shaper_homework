@@ -12,6 +12,7 @@ set(HEADER_FILES
 	include/I_OutWriter.h
 	include/ObjParser.h
 	include/StlWriter.h
+	include/Triangle.h
 	include/Utilities.h
 )
 

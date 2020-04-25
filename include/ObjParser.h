@@ -19,5 +19,6 @@ private:
     std::optional<std::string> parseVertexLine(const std::vector<std::string>& vec);
     std::optional<std::string> parseTextureVertexLine(const std::vector<std::string>& vec);
     std::optional<std::string> parseVertexNormalLine(const std::vector<std::string>& vec);
+    std::optional<std::string> parseFaceLine(const std::vector<std::string>& vec);
 };
 }  // namespace shaper
