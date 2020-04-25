@@ -23,7 +23,6 @@ struct Triangle
 
     // This gets the surface normal, by creating a vector orthogonal to the surface,
     // and determining if its the correct one by comparing it to the average vertex normal.
-    // Don't know how error-proof it is though...
     glm::vec3 getSurfaceNormal() const
     {
         const glm::vec3 averageNormal{ (normalA.x + normalB.x + normalC.x) / 3, (normalA.y + normalB.y + normalC.y) / 3,
@@ -38,7 +37,7 @@ struct Triangle
         const glm::vec3 ab = b - a;
         const glm::vec3 ac = c - a;
 
-        glm::vec3 normal = glm::cross(ab, ac);
+        const glm::vec3 normal = glm::cross(ab, ac);
         if (glm::dot(normal, averageNormal) > 0)  // If the vectors look in the same direction its okay, else flip our calculated normal
         {
             return glm::normalize(normal);

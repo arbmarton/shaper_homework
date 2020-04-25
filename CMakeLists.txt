@@ -31,19 +31,16 @@ add_executable(${PROJECT_NAME}
 			   ${SOURCE_FILES}
 )
 
+add_dependencies(${PROJECT_NAME} glm)
+
 target_include_directories(${PROJECT_NAME} PRIVATE
 						   ${CMAKE_CURRENT_LIST_DIR}/include
 						   ${CMAKE_CURRENT_LIST_DIR}/thirdparty/glm/glm/
 )
 
 target_link_libraries(${PROJECT_NAME} 
-					  ${CMAKE_CURRENT_LIST_DIR}/out/thirdparty/glm/glm/$<CONFIG>/glm_static.lib
+					  glm_static
 )
-
-add_dependencies(${PROJECT_NAME} glm)
-
-source_group("shaders" FILES ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
-source_group("thirdparty" FILES ${THIRDPARTY_HEADERS})
 				
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 

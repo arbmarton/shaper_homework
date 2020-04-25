@@ -139,6 +139,9 @@ bool ObjParser::parseVertexNormalLine(const std::vector<std::string>& vec)
     return true;
 }
 
+
+// https://stackoverflow.com/questions/23723993/converting-quadriladerals-in-an-obj-file-into-triangles
+// Based on this the points should be regarded as triangle fans
 bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
 {
     if (vec.size() < 4)

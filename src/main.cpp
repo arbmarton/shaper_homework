@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     (void)argc;
     (void)argv;
 
-    Converter conv(SupportedInputFormats::OBJ, utilities::getTestFilePath("pyramid.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
+    Converter conv(SupportedInputFormats::OBJ, utilities::getTestFilePath("nanosuit.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
 
     if (!conv.convert())
     {
