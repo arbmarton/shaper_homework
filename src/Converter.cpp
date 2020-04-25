@@ -20,11 +20,9 @@ Converter::Converter(
     switch (output)
     {
         case SupportedOutputFormats::STL:
-            writer = std::make_unique<StlWriter>();
+            writer = std::make_unique<StlWriter>(this, outputPath);
             break;
     }
-
-    (void)(outputPath);
 }
 
 Converter::~Converter() = default;
@@ -37,6 +35,8 @@ std::optional<std::string> Converter::convert()
         error = *err;
         return err;
     }
+
+    writer->write();
 
     return {};
 }

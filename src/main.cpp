@@ -3,16 +3,44 @@
 
 #include <iostream>
 
+
+#pragma warning(push)
+#pragma warning(disable : 4201)
+#include "glm.hpp"
+#pragma warning(pop)
+
+
 namespace shaper {
 
 }
 
 using namespace shaper;
 
+int
+is_big_endian_machine(void)
+{
+    static
+        unsigned
+        tst = 1;
+
+    static
+        int
+        stat = (*(unsigned char*)&tst) != 1;
+
+    return stat;
+}
+
 int main(int argc, char** argv)
 {
     (void)argc;
     (void)argv;
+
+    auto aaaa = is_big_endian_machine();
+    (void)aaaa;
+
+    glm::vec3 sdfdsf;
+    aaaa = sizeof(sdfdsf);
+
 
     //glm::vec3 fsdfsd(1, 1, 1);
 
