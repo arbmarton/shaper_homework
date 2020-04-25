@@ -3,6 +3,11 @@
 #include "Enums.h"
 #include "Triangle.h"
 
+#pragma warning(push)
+#pragma warning(disable : 4201)
+#include "glm.hpp"
+#pragma warning(pop)
+
 #include <string>
 #include <filesystem>
 #include <memory>
@@ -24,6 +29,11 @@ public:
     Converter(const Converter& rhs) = delete;
     Converter(Converter&& rhs) = delete;
     ~Converter();
+
+    // Rotate around 'v', by 'radians' amount
+    void addRotation(const glm::vec3& v, const float radians);
+    void addTranslation(const glm::vec3& v);
+    void addScaling(const glm::vec3& v);
 
     const std::string& getError() const
     {
@@ -54,6 +64,8 @@ private:
     std::unique_ptr<I_OutWriter> writer;
 
     std::vector<Triangle> triangles;
+
+    glm::mat4 trf = glm::mat4(1.0f);
 };
 
 }  // namespace shaper

@@ -5,8 +5,7 @@
 #include "glm.hpp"
 #pragma warning(pop)
 
-namespace shaper
-{
+namespace shaper {
 
 
 struct Triangle
@@ -17,7 +16,7 @@ struct Triangle
     glm::vec3 textureA;
     glm::vec3 textureB;
     glm::vec3 textureC;
-    glm::vec3 normalA;
+    glm::vec3 normalA;  // normals dont need to be unit vectors!
     glm::vec3 normalB;
     glm::vec3 normalC;
 
@@ -47,6 +46,16 @@ struct Triangle
             return glm::normalize(-1.0f * normal);
         }
     }
+
+    void applyTransformation(const glm::mat4& m)
+    {
+        a = m * glm::vec4(a, 1.0f);
+        b = m * glm::vec4(b, 1.0f);
+        c = m * glm::vec4(c, 1.0f);
+        normalA = m * glm::vec4(normalA, 1.0f);
+        normalB = m * glm::vec4(normalB, 1.0f);
+        normalC = m * glm::vec4(normalC, 1.0f);
+    }
 };
 
-}
+}  // namespace shaper
