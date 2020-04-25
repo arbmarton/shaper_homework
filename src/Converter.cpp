@@ -23,12 +23,21 @@ Converter::Converter(
             writer = std::make_unique<StlWriter>();
             break;
     }
+
+    (void)(outputPath);
 }
 
 Converter::~Converter() = default;
 
-std::optional<std::string> Converter::convert() const
+std::optional<std::string> Converter::convert()
 {
+    const auto err = parser->parse();
+    if (err)
+    {
+        error = *err;
+        return err;
+    }
+
     return {};
 }
 

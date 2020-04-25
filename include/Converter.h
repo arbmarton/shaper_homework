@@ -1,8 +1,12 @@
 #pragma once
 
 #include "Enums.h"
-//#include "I_InputParser.h"
-//#include "I_OutWriter.h"
+
+#pragma warning(push)
+#pragma warning(disable : 4201)
+#include "glm.hpp"
+#pragma warning(pop)
+
 
 #include <string>
 #include <optional>
@@ -33,7 +37,37 @@ public:
     }
 
     // Returns nullopt if succesful
-    std::optional<std::string> convert() const;
+    std::optional<std::string> convert();
+
+    std::vector<glm::vec4>& getVertices()
+    {
+        return vertices;
+    }
+
+    const std::vector<glm::vec4>& getVertices() const
+    {
+        return vertices;
+    }
+
+    std::vector<glm::vec3>& getTextureVertices()
+    {
+        return textureVertices;
+    }
+
+    const std::vector<glm::vec3>& getTextureVertices() const
+    {
+        return textureVertices;
+    }
+
+    std::vector<glm::vec3>& getVertexNormals()
+    {
+        return vertexNormals;
+    }
+
+    const std::vector<glm::vec3>& getVertexNormals() const
+    {
+        return vertexNormals;
+    }
 
 private:
     std::string error;
@@ -42,6 +76,9 @@ private:
     std::unique_ptr<I_OutWriter> writer;
 
     // DATA members like points and faces and stuff here
+    std::vector<glm::vec4> vertices;
+    std::vector<glm::vec3> textureVertices;
+    std::vector<glm::vec3> vertexNormals;
 };
 
 }  // namespace shaper

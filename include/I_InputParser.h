@@ -3,6 +3,8 @@
 #include "Enums.h"
 
 #include <filesystem>
+#include <optional>
+#include <string>
 
 namespace shaper {
 
@@ -14,7 +16,7 @@ public:
     I_InputParser(Converter* parentConverter, const std::filesystem::path& input, const SupportedInputFormats format);
     virtual ~I_InputParser() = default;
 
-    virtual void parse() = 0;
+    virtual std::optional<std::string> parse() = 0;
 
 protected:
     Converter* parentConverter;
