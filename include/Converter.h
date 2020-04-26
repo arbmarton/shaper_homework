@@ -30,6 +30,9 @@ public:
     Converter(Converter&& rhs) = delete;
     ~Converter();
 
+    Converter& operator=(const Converter& rhs) = delete;
+    Converter& operator=(Converter&& rhs) = delete;
+
     // Rotate around 'v', by 'radians' amount
     void addRotation(const glm::vec3& v, const float radians);
     void addTranslation(const glm::vec3& v);

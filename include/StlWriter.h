@@ -7,9 +7,15 @@ class StlWriter : public I_OutWriter
 {
 public:
     StlWriter(Converter* parentConverter, const std::filesystem::path& outFile);
+    ~StlWriter() = default;
+
+    StlWriter() = delete;
+    StlWriter(const StlWriter& rhs) = delete;
+    StlWriter(StlWriter&& rhs) = delete;
+
+    StlWriter& operator=(const StlWriter& rhs) = delete;
+    StlWriter& operator=(StlWriter&& rhs) = delete;
 
     virtual bool write() override;
-
-private:
 };
 }  // namespace shaper

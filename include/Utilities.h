@@ -9,6 +9,7 @@ namespace utilities {
 
 std::filesystem::path getTestFileFolderPath();
 std::filesystem::path getTestFilePath(const std::string& fileName);
+bool fileExists(const std::filesystem::path& path);
 
 std::vector<std::string> splitString(const std::string& toSplit, const char ch);
 std::vector<std::string> readTextFile(const std::filesystem::path& path);

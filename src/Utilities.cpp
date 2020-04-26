@@ -19,6 +19,11 @@ std::filesystem::path getTestFilePath(const std::string& fileName)
     return std::filesystem::path(getTestFileFolderPath().string() + fileName);
 }
 
+bool fileExists(const std::filesystem::path& path)
+{
+    return std::filesystem::exists(path);
+}
+
 std::vector<std::string> splitString(const std::string& toSplit, const char ch)
 {
     std::stringstream stream(toSplit);

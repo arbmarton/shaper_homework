@@ -17,6 +17,14 @@ class ObjParser : public I_InputParser
 {
 public:
     ObjParser(Converter* parentConverter, const std::filesystem::path& input);
+    ~ObjParser() = default;
+
+    ObjParser() = delete;
+    ObjParser(const ObjParser& rhs) = delete;
+    ObjParser(ObjParser&& rhs) = delete;
+
+    ObjParser& operator=(const ObjParser& rhs) = delete;
+    ObjParser& operator=(ObjParser&& rhs) = delete;
 
     virtual bool parse() override;
 
