@@ -2,7 +2,7 @@
 
 namespace shaper {
 
-I_InputParser::I_InputParser(Converter* parentConverter, const std::filesystem::path& input, const SupportedInputFormats format)
+I_InputParser::I_InputParser(Converter* parentConverter, const std::filesystem::path& input, const SupportedInputFormats format) noexcept
     : m_parentConverter(parentConverter)
     , m_inputFile(input)
     , m_format(format)

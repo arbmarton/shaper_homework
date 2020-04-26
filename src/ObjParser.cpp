@@ -9,10 +9,11 @@
 
 #include <iostream>
 #include <array>
+#include <algorithm>
 
 namespace shaper {
 
-ObjParser::ObjParser(Converter* parentConverter, const std::filesystem::path& input)
+ObjParser::ObjParser(Converter* parentConverter, const std::filesystem::path& input) noexcept
     : I_InputParser(parentConverter, input, SupportedInputFormats::OBJ)
 {
 }
@@ -28,7 +29,10 @@ bool ObjParser::parse()
             continue;
         }
 
-        const std::vector<std::string> splitLine{ utilities::splitString(str, ' ') };
+        std::vector<std::string> splitLine{ utilities::splitString(str, ' ') };
+
+        // Remove empty strings
+        splitLine.erase(std::remove(splitLine.begin(), splitLine.end(), ""), splitLine.end());
 
         if (splitLine.size() == 0)
         {
@@ -69,7 +73,7 @@ bool ObjParser::parse()
         }
         else
         {
-            std::cout << "PARSING: Ignoring token \"" << token << "\"\n";
+            //std::cout << "PARSING: Ignoring token \"" << token << "\"\n";
         }
     }
 

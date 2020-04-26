@@ -6,20 +6,27 @@
 
 namespace shaper {
 
-StlWriter::StlWriter(Converter* parentConverter, const std::filesystem::path& outFile)
+StlWriter::StlWriter(Converter* parentConverter, const std::filesystem::path& outFile) noexcept
     : I_OutWriter(parentConverter, outFile, SupportedOutputFormats::STL)
 {
 }
 
 bool StlWriter::write()
 {
-    char dummyheader[80];
+    char dummyheader[80] = { '0' };
 
     std::ofstream outfile;
 
     const int32_t triangles = int32_t(m_parentConverter->getTriangles().size());
 
     outfile.open(m_filePath.string(), std::ios::out | std::ios::binary);
+
+    if (!outfile.is_open())
+    {
+        m_parentConverter->setError("Outfile could not be opened.");
+        return false;
+    }
+
     outfile.write(dummyheader, sizeof(dummyheader));
     outfile.write((char*)(&triangles), sizeof(int32_t));
 

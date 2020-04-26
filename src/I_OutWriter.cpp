@@ -2,7 +2,7 @@
 
 namespace shaper {
 
-I_OutWriter::I_OutWriter(Converter* parentConverter, const std::filesystem::path& outFile, const SupportedOutputFormats format)
+I_OutWriter::I_OutWriter(Converter* parentConverter, const std::filesystem::path& outFile, const SupportedOutputFormats format) noexcept
     : m_parentConverter(parentConverter)
     , m_filePath(outFile)
     , m_format(format)

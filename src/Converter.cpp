@@ -68,14 +68,15 @@ float Converter::calculateMeshVolume() const
         accum += tr.calculateSignedVolume();
     }
 
-    return accum;
+    return abs(accum);
 }
 
+// Create a dummy ray, and if it intersects the object an odd number of times its inside
 bool Converter::isPointInsideTheMesh(const glm::vec3& pt) const
 {
     uint32_t intersections{ 0 };
 
-    Ray ray{ pt, { 1, 0, 0 } };
+    const Ray ray{ pt, { 1, 0, 0 } };
 
     for (const Triangle& tr : m_triangles)
     {

@@ -24,6 +24,7 @@ set(SOURCE_FILES
 	src/main.cpp
 	src/ObjParser.cpp
 	src/StlWriter.cpp
+	src/Triangle.cpp
 	src/Utilities.cpp
 )
 

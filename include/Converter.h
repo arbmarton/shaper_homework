@@ -65,13 +65,16 @@ public:
     }
 
 private:
+    // Stores the last encountered error
     std::string m_error;
 
     std::unique_ptr<I_InputParser> m_parser;
     std::unique_ptr<I_OutWriter> m_writer;
 
+    // The triangles in the mesh
     std::vector<Triangle> m_triangles;
 
+    // The transformation to be applied on the mesh
     glm::mat4 m_trf = glm::mat4(1.0f);
 };
 

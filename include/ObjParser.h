@@ -16,7 +16,7 @@ class Converter;
 class ObjParser : public I_InputParser
 {
 public:
-    ObjParser(Converter* parentConverter, const std::filesystem::path& input);
+    ObjParser(Converter* parentConverter, const std::filesystem::path& input) noexcept;
     ~ObjParser() = default;
 
     ObjParser() = delete;

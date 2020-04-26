@@ -16,7 +16,7 @@ public:
     I_InputParser(const I_InputParser& rhs) = delete;
     I_InputParser(I_InputParser&& rhs) = delete;
 
-    I_InputParser(Converter* parentConverter, const std::filesystem::path& input, const SupportedInputFormats format);
+    I_InputParser(Converter* parentConverter, const std::filesystem::path& input, const SupportedInputFormats format) noexcept;
     virtual ~I_InputParser() = default;
 
     I_InputParser& operator=(const I_InputParser& rhs) = delete;

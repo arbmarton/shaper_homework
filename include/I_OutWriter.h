@@ -11,7 +11,7 @@ class Converter;
 class I_OutWriter
 {
 public:
-    I_OutWriter(Converter* parentConverter, const std::filesystem::path& outFile, const SupportedOutputFormats format);
+    I_OutWriter(Converter* parentConverter, const std::filesystem::path& outFile, const SupportedOutputFormats format) noexcept;
     virtual ~I_OutWriter();
 
     I_OutWriter() = delete;

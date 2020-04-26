@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <chrono>
 
 using namespace shaper;
 
@@ -12,11 +13,13 @@ using namespace shaper;
 
 int main(int argc, char* argv[])
 {
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
     std::unique_ptr<Converter> conv{ nullptr };
 
     if (argc != 5)
     {
-        conv = std::make_unique<Converter>(SupportedInputFormats::OBJ, utilities::getTestFilePath("cow.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
+        conv = std::make_unique<Converter>(SupportedInputFormats::OBJ, utilities::getTestFilePath("nanosuit.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
     }
     else
     {
@@ -44,7 +47,7 @@ int main(int argc, char* argv[])
             return -1;
         }
 
-        conv = std::make_unique<Converter>(input, utilities::getTestFilePath(inputFile + "." + inputFormat), output, utilities::getTestFilePath("." + outputFile));
+        conv = std::make_unique<Converter>(input, utilities::getTestFilePath(inputFile + "." + inputFormat), output, utilities::getTestFilePath(outputFile + "." + outputFormat));
     }
 
     //conv->addTranslation({ 100, 0, 100 });
@@ -62,6 +65,10 @@ int main(int argc, char* argv[])
     std::cout << "Mesh area: " << conv->calculateMeshArea() << "\n";
     std::cout << "Mesh volume: " << conv->calculateMeshVolume() << "\n";
     std::cout << "Is point inside: " << conv->isPointInsideTheMesh({ 0.35f, 12, 30.3 }) << "\n";
+
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+    std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
 
 #ifdef _WIN32
     system("pause");  // TODO: windows only, remove this
