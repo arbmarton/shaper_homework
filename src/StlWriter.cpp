@@ -17,13 +17,13 @@ bool StlWriter::write()
 
     std::ofstream outfile;
 
-    const int32_t triangles = int32_t(parentConverter->getTriangles().size());
+    const int32_t triangles = int32_t(m_parentConverter->getTriangles().size());
 
-    outfile.open(filePath.string(), std::ios::out | std::ios::binary);
+    outfile.open(m_filePath.string(), std::ios::out | std::ios::binary);
     outfile.write(dummyheader, sizeof(dummyheader));
     outfile.write((char*)(&triangles), sizeof(int32_t));
 
-    for (const Triangle& tr : parentConverter->getTriangles())
+    for (const Triangle& tr : m_parentConverter->getTriangles())
     {
         // Normal
         const glm::vec3 surfaceNormal = tr.getSurfaceNormal();
@@ -32,19 +32,19 @@ bool StlWriter::write()
         outfile.write((char*)&surfaceNormal.z, sizeof(float));
 
         // Vertex a
-        outfile.write((char*)&tr.a.x, sizeof(float));
-        outfile.write((char*)&tr.a.y, sizeof(float));
-        outfile.write((char*)&tr.a.z, sizeof(float));
+        outfile.write((char*)&tr.m_a.x, sizeof(float));
+        outfile.write((char*)&tr.m_a.y, sizeof(float));
+        outfile.write((char*)&tr.m_a.z, sizeof(float));
 
         // Vertex b
-        outfile.write((char*)&tr.b.x, sizeof(float));
-        outfile.write((char*)&tr.b.y, sizeof(float));
-        outfile.write((char*)&tr.b.z, sizeof(float));
+        outfile.write((char*)&tr.m_b.x, sizeof(float));
+        outfile.write((char*)&tr.m_b.y, sizeof(float));
+        outfile.write((char*)&tr.m_b.z, sizeof(float));
 
         // Vertex c
-        outfile.write((char*)&tr.c.x, sizeof(float));
-        outfile.write((char*)&tr.c.y, sizeof(float));
-        outfile.write((char*)&tr.c.z, sizeof(float));
+        outfile.write((char*)&tr.m_c.x, sizeof(float));
+        outfile.write((char*)&tr.m_c.y, sizeof(float));
+        outfile.write((char*)&tr.m_c.z, sizeof(float));
 
         // Attribute thing
         outfile.write("0", 1);

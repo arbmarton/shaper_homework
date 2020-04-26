@@ -1,6 +1,7 @@
 #include "Converter.h"
 #include "ObjParser.h"
 #include "StlWriter.h"
+#include "Ray.h"
 
 #include "gtc/matrix_transform.hpp"
 
@@ -15,14 +16,14 @@ Converter::Converter(
     switch (input)
     {
         case SupportedInputFormats::OBJ:
-            parser = std::make_unique<ObjParser>(this, inputPath);
+            m_parser = std::make_unique<ObjParser>(this, inputPath);
             break;
     }
 
     switch (output)
     {
         case SupportedOutputFormats::STL:
-            writer = std::make_unique<StlWriter>(this, outputPath);
+            m_writer = std::make_unique<StlWriter>(this, outputPath);
             break;
     }
 }
@@ -31,40 +32,86 @@ Converter::~Converter() = default;
 
 void Converter::addRotation(const glm::vec3& v, const float radians)
 {
-    trf = glm::rotate(trf, radians, v);
+    m_trf = glm::rotate(m_trf, radians, v);
 }
 
 void Converter::addTranslation(const glm::vec3& v)
 {
-    trf = glm::translate(trf, v);
+    m_trf = glm::translate(m_trf, v);
 }
 
 void Converter::addScaling(const glm::vec3& v)
 {
-    trf = glm::scale(trf, v);
+    m_trf = glm::scale(m_trf, v);
+}
+
+float Converter::calculateMeshArea() const
+{
+    // TODO: could be parallelized, make accum atomic
+    float accum = 0.0f;
+
+    for (const Triangle& tr : m_triangles)
+    {
+        accum += tr.area();
+    }
+
+    return accum;
+}
+
+float Converter::calculateMeshVolume() const
+{
+    // TODO: could be parallelized, make accum atomic
+    float accum = 0.0f;
+
+    for (const Triangle& tr : m_triangles)
+    {
+        accum += tr.calculateSignedVolume();
+    }
+
+    return accum;
+}
+
+bool Converter::isPointInsideTheMesh(const glm::vec3& pt) const
+{
+    uint32_t intersections{ 0 };
+
+    Ray ray{ pt, { 1, 0, 0 } };
+
+    for (const Triangle& tr : m_triangles)
+    {
+        if (tr.intersectsWith(ray))
+        {
+            intersections++;
+        }
+    }
+
+    if (intersections % 2 == 0)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool Converter::convert()
 {
-    bool err = parser->parse();
-    if (!err)
+    if (!m_parser->parse())
     {
         return false;
     }
 
     // Dont bother if its the unit matrix
-    if (trf != glm::mat4(1.0f))
+    if (m_trf != glm::mat4(1.0f))
     {
         // TODO: this can be parallelized
 
-        for (Triangle& tr : triangles)
+        for (Triangle& tr : m_triangles)
         {
-            tr.applyTransformation(trf);
+            tr.applyTransformation(m_trf);
         }
     }
 
-    err = writer->write();
-    if (!err)
+    if (!m_writer->write())
     {
         return false;
     }

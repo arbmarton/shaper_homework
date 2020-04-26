@@ -3,9 +3,9 @@
 namespace shaper {
 
 I_OutWriter::I_OutWriter(Converter* parentConverter, const std::filesystem::path& outFile, const SupportedOutputFormats format)
-    : parentConverter(parentConverter)
-    , filePath(outFile)
-    , format(format)
+    : m_parentConverter(parentConverter)
+    , m_filePath(outFile)
+    , m_format(format)
 {
 }
 

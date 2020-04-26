@@ -7,7 +7,6 @@
 #include "glm.hpp"
 #pragma warning(pop)
 
-
 #include <filesystem>
 
 namespace shaper {
@@ -22,9 +21,9 @@ public:
     virtual bool parse() override;
 
 private:
-    std::vector<glm::vec4> vertices;
-    std::vector<glm::vec3> textureVertices;
-    std::vector<glm::vec3> vertexNormals;
+    std::vector<glm::vec4> m_vertices;
+    std::vector<glm::vec3> m_textureVertices;
+    std::vector<glm::vec3> m_vertexNormals;
 
     bool parseVertexLine(const std::vector<std::string>& vec);
     bool parseTextureVertexLine(const std::vector<std::string>& vec);

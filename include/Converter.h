@@ -35,37 +35,41 @@ public:
     void addTranslation(const glm::vec3& v);
     void addScaling(const glm::vec3& v);
 
+    float calculateMeshArea() const;
+    float calculateMeshVolume() const;
+    bool isPointInsideTheMesh(const glm::vec3& pt) const;
+
     const std::string& getError() const
     {
-        return error;
+        return m_error;
     }
 
     void setError(const std::string& errorStr)
     {
-        error = errorStr;
+        m_error = errorStr;
     }
 
     bool convert();
 
     std::vector<Triangle>& getTriangles()
     {
-        return triangles;
+        return m_triangles;
     }
 
     const std::vector<Triangle>& getTriangles() const
     {
-        return triangles;
+        return m_triangles;
     }
 
 private:
-    std::string error;
+    std::string m_error;
 
-    std::unique_ptr<I_InputParser> parser;
-    std::unique_ptr<I_OutWriter> writer;
+    std::unique_ptr<I_InputParser> m_parser;
+    std::unique_ptr<I_OutWriter> m_writer;
 
-    std::vector<Triangle> triangles;
+    std::vector<Triangle> m_triangles;
 
-    glm::mat4 trf = glm::mat4(1.0f);
+    glm::mat4 m_trf = glm::mat4(1.0f);
 };
 
 }  // namespace shaper

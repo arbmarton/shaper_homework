@@ -3,7 +3,6 @@
 #include "Enums.h"
 
 #include <filesystem>
-#include <optional>
 #include <string>
 
 namespace shaper {
@@ -19,10 +18,10 @@ public:
     virtual bool parse() = 0;
 
 protected:
-    Converter* parentConverter;
-    std::filesystem::path inputFile;
+    Converter* m_parentConverter;
+    std::filesystem::path m_inputFile;
 
-    SupportedInputFormats format;
+    SupportedInputFormats m_format;
 };
 
 }  // namespace shaper

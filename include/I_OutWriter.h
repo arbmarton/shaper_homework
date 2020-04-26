@@ -17,10 +17,10 @@ public:
     virtual bool write() = 0;
 
 protected:
-    Converter* parentConverter;
-    std::filesystem::path filePath;
+    Converter* m_parentConverter;
+    std::filesystem::path m_filePath;
 
-    SupportedOutputFormats format;
+    SupportedOutputFormats m_format;
 };
 
 }  // namespace shaper

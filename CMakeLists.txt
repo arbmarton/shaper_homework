@@ -11,6 +11,7 @@ set(HEADER_FILES
 	include/I_InputParser.h
 	include/I_OutWriter.h
 	include/ObjParser.h
+	include/Ray.h
 	include/StlWriter.h
 	include/Triangle.h
 	include/Utilities.h
