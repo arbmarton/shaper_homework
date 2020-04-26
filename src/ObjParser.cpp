@@ -22,6 +22,11 @@ bool ObjParser::parse()
 {
     const std::vector<std::string> rawLineData{ utilities::readTextFile(m_inputFile) };
 
+    if (rawLineData.size() == 0)
+    {
+        m_parentConverter->setError(m_inputFile.string() + " could not be opened or was empty.");
+    }
+
     for (const std::string& str : rawLineData)
     {
         if (str.size() == 0)
@@ -73,7 +78,10 @@ bool ObjParser::parse()
         }
         else
         {
-            //std::cout << "PARSING: Ignoring token \"" << token << "\"\n";
+            if (m_parentConverter->isLoggingEnabled())
+            {
+                std::cout << "PARSING: Ignoring token \"" << token << "\"\n";
+            }
         }
     }
 
@@ -157,20 +165,31 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
         return false;
     }
 
+    // Check if the forward slashes are consistent
+    const uint32_t referenceCount = utilities::countCharInString(vec[1], '/');
+    for (size_t i = 2; i < vec.size(); ++i)
+    {
+        if (utilities::countCharInString(vec[i], '/') != referenceCount)
+        {
+            m_parentConverter->setError("Line has inconsistent slashes");
+            return false;
+        }
+    }
+
     std::vector<Triangle> trianglesInFace;
     trianglesInFace.resize(vec.size() - 3);
 
     // Check if its a single number, the parsing is more simple then
     if (vec[1].find('/') == std::string::npos)
     {
-        std::vector<int> numbers;
+        std::vector<size_t> numbers;
         numbers.reserve(vec.size() - 1);
-        for (int i = 1; i < vec.size(); ++i)
+        for (size_t i = 1; i < vec.size(); ++i)
         {
-            numbers.push_back(std::stoi(vec[i]));
+            numbers.push_back(std::stoul(vec[i]));
         }
 
-        for (int i = 0; i < trianglesInFace.size(); ++i)
+        for (size_t i = 0; i < trianglesInFace.size(); ++i)
         {
             glm::vec3 a;
             glm::vec3 b;
@@ -211,15 +230,15 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
         // Texture coords are missing
         if (utilities::splitString(vec[1], '/')[1] == "")
         {
-            std::vector<std::pair<int, int>> numbers;  // vertices and normals
+            std::vector<std::pair<size_t, size_t>> numbers;  // vertices and normals
             numbers.reserve(vec.size() - 1);
-            for (int i = 1; i < vec.size(); ++i)
+            for (size_t i = 1; i < vec.size(); ++i)
             {
                 const std::vector<std::string> splitGroup{ utilities::splitString(vec[i], '/') };
-                numbers.push_back(std::make_pair<int, int>(std::stoi(splitGroup[0]), std::stoi(splitGroup[2])));
+                numbers.push_back(std::make_pair<size_t, size_t>(std::stoul(splitGroup[0]), std::stoul(splitGroup[2])));
             }
 
-            for (int i = 0; i < trianglesInFace.size(); ++i)
+            for (size_t i = 0; i < trianglesInFace.size(); ++i)
             {
                 glm::vec3 a;
                 glm::vec3 b;
@@ -290,15 +309,15 @@ bool ObjParser::parseFaceLine(const std::vector<std::string>& vec)
         }
         else  // Everything is present
         {
-            std::vector<std::array<int, 3>> numbers;  // vertices and normals
+            std::vector<std::array<size_t, 3>> numbers;  // vertices and normals
             numbers.reserve(vec.size() - 1);
-            for (int i = 1; i < vec.size(); ++i)
+            for (size_t i = 1; i < vec.size(); ++i)
             {
                 const std::vector<std::string> splitGroup{ utilities::splitString(vec[i], '/') };
-                numbers.push_back({ std::stoi(splitGroup[0]), std::stoi(splitGroup[1]), std::stoi(splitGroup[2]) });
+                numbers.push_back({ std::stoul(splitGroup[0]), std::stoul(splitGroup[1]), std::stoul(splitGroup[2]) });
             }
 
-            for (int i = 0; i < trianglesInFace.size(); ++i)
+            for (size_t i = 0; i < trianglesInFace.size(); ++i)
             {
                 glm::vec3 a;
                 glm::vec3 b;

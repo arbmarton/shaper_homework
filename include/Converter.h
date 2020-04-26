@@ -24,7 +24,8 @@ public:
         const SupportedInputFormats input,
         const std::filesystem::path& inputPath,
         const SupportedOutputFormats output,
-        const std::filesystem::path& outputPath);
+        const std::filesystem::path& outputPath,
+        const bool logging = false);
     Converter() = delete;
     Converter(const Converter& rhs) = delete;
     Converter(Converter&& rhs) = delete;
@@ -64,6 +65,11 @@ public:
         return m_triangles;
     }
 
+    bool isLoggingEnabled() const
+    {
+        return m_logging;
+    }
+
 private:
     // Stores the last encountered error
     std::string m_error;
@@ -76,6 +82,8 @@ private:
 
     // The transformation to be applied on the mesh
     glm::mat4 m_trf = glm::mat4(1.0f);
+
+    bool m_logging;
 };
 
 }  // namespace shaper

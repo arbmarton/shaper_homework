@@ -7,10 +7,10 @@ namespace shaper {
 
 enum class SupportedInputFormats
 {
-    OBJ,
+    OBJ
 };
 
-inline SupportedInputFormats stringToInput(const std::string& str)
+inline SupportedInputFormats stringToInputFormat(const std::string& str)
 {
     if (str == "obj")
     {
@@ -27,7 +27,7 @@ enum class SupportedOutputFormats
     STL
 };
 
-inline SupportedOutputFormats stringToOutput(const std::string& str)
+inline SupportedOutputFormats stringToOutputFormat(const std::string& str)
 {
     if (str == "stl")
     {

@@ -13,14 +13,14 @@ using namespace shaper;
 
 int main(int argc, char* argv[])
 {
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    const std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
     std::unique_ptr<Converter> conv{ nullptr };
 
     if (argc != 5)
     {
         conv = std::make_unique<Converter>(
-            SupportedInputFormats::OBJ, utilities::getTestFilePath("nanosuit.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
+            SupportedInputFormats::OBJ, utilities::getTestFilePath("room.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
     }
     else
     {
@@ -33,8 +33,8 @@ int main(int argc, char* argv[])
         SupportedOutputFormats output;
         try
         {
-            input = stringToInput(inputFormat);
-            output = stringToOutput(outputFormat);
+            input = stringToInputFormat(inputFormat);
+            output = stringToOutputFormat(outputFormat);
         } catch (const std::invalid_argument& exc)
         {
             std::cout << exc.what() << "\n";
@@ -56,7 +56,6 @@ int main(int argc, char* argv[])
     //conv->addTranslation({ 100, 0, 100 });
     //conv->addScaling({ 3, 3, 1 });
 
-
     if (!conv->convert())
     {
         std::cout << conv->getError() << "\n";
@@ -67,9 +66,9 @@ int main(int argc, char* argv[])
     std::cout << "Mesh volume: " << conv->calculateMeshVolume() << "\n";
     std::cout << "Is point inside: " << conv->isPointInsideTheMesh({ 0.35f, 12, 30.3 }) << "\n";
 
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-
-    std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
+    // Log time
+    const std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::cout << "Execution time: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000.0f << "ms\n";
 
 #ifdef _WIN32
     system("pause");  // TODO: windows only, remove this

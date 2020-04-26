@@ -5,16 +5,25 @@
 
 #include "gtc/matrix_transform.hpp"
 
+// This turns on the warning for unhandled switch cases
+// I think theres an equivalent warning on linux
+#ifdef _WIN32
+#pragma warning(default : 4062)
+#endif
+
 namespace shaper {
 
 Converter::Converter(
     const SupportedInputFormats input,
     const std::filesystem::path& inputPath,
     const SupportedOutputFormats output,
-    const std::filesystem::path& outputPath)
+    const std::filesystem::path& outputPath,
+    const bool logging)
+    : m_logging(logging)
 {
     switch (input)
     {
+        // do not implement the default here, its purposefully omitted
         case SupportedInputFormats::OBJ:
             m_parser = std::make_unique<ObjParser>(this, inputPath);
             break;
@@ -22,6 +31,7 @@ Converter::Converter(
 
     switch (output)
     {
+        // do not implement the default here, its purposefully omitted
         case SupportedOutputFormats::STL:
             m_writer = std::make_unique<StlWriter>(this, outputPath);
             break;
@@ -78,6 +88,7 @@ bool Converter::isPointInsideTheMesh(const glm::vec3& pt) const
 
     const Ray ray{ pt, { 1, 0, 0 } };
 
+    // TODO: this can be parallelized
     for (const Triangle& tr : m_triangles)
     {
         if (tr.intersectsWith(ray))

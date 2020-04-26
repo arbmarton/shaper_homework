@@ -37,7 +37,9 @@ std::vector<std::string> splitString(const std::string& toSplit, const char ch)
         output.emplace_back(toSplit.substr(start, end - start));
 
         if (end == std::string::npos)
+        {
             break;
+        }
 
         start = end + 1;
         end = toSplit.find_first_of(ch, start);
@@ -60,6 +62,21 @@ std::vector<std::string> readTextFile(const std::filesystem::path& path)
             ret.emplace_back(line);
         }
         file.close();
+    }
+
+    return ret;
+}
+
+uint32_t countCharInString(const std::string& str, const char ch)
+{
+    uint32_t ret{ 0 };
+
+    for (const char c : str)
+    {
+        if (c == ch)
+        {
+            ret++;
+        }
     }
 
     return ret;
