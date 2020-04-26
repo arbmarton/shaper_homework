@@ -10,8 +10,7 @@ enum class SupportedInputFormats
     OBJ,
 };
 
-inline
-SupportedInputFormats stringToInput(const std::string& str)
+inline SupportedInputFormats stringToInput(const std::string& str)
 {
     if (str == "obj")
     {
@@ -28,8 +27,7 @@ enum class SupportedOutputFormats
     STL
 };
 
-inline
-SupportedOutputFormats stringToOutput(const std::string& str)
+inline SupportedOutputFormats stringToOutput(const std::string& str)
 {
     if (str == "stl")
     {

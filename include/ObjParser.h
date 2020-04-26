@@ -29,10 +29,12 @@ public:
     virtual bool parse() override;
 
 private:
+    // Temporary buffers used during parsing
     std::vector<glm::vec4> m_vertices;
     std::vector<glm::vec3> m_textureVertices;
     std::vector<glm::vec3> m_vertexNormals;
 
+    // These functions take a line of a document split up into substrings
     bool parseVertexLine(const std::vector<std::string>& vec);
     bool parseTextureVertexLine(const std::vector<std::string>& vec);
     bool parseVertexNormalLine(const std::vector<std::string>& vec);

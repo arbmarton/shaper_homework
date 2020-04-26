@@ -24,18 +24,26 @@ bool fileExists(const std::filesystem::path& path)
     return std::filesystem::exists(path);
 }
 
+// http://www.cplusplus.com/forum/beginner/114790/
 std::vector<std::string> splitString(const std::string& toSplit, const char ch)
 {
-    std::stringstream stream(toSplit);
-    std::string segment;
-    std::vector<std::string> seglist;
+    size_t start = 0;
+    size_t end = toSplit.find_first_of(ch);
 
-    while (std::getline(stream, segment, ch))
+    std::vector<std::string> output;
+
+    while (end <= std::string::npos)
     {
-        seglist.push_back(segment);
+        output.emplace_back(toSplit.substr(start, end - start));
+
+        if (end == std::string::npos)
+            break;
+
+        start = end + 1;
+        end = toSplit.find_first_of(ch, start);
     }
 
-    return seglist;
+    return output;
 }
 
 //https://stackoverflow.com/a/51572325/6874134
@@ -49,7 +57,6 @@ std::vector<std::string> readTextFile(const std::filesystem::path& path)
         std::string line;
         while (std::getline(file, line))
         {
-            //std::cout << ret.emplace_back(line) << "\n";
             ret.emplace_back(line);
         }
         file.close();

@@ -26,10 +26,12 @@ struct Triangle
     // and determining if its the correct one by comparing it to the average vertex normal.
     glm::vec3 getSurfaceNormal() const;
 
+    // Apply a generic transformation matrix to the positions and normals
     void applyTransformation(const glm::mat4& m);
 
     float area() const;
 
+    // https://stackoverflow.com/questions/1406029/how-to-calculate-the-volume-of-a-3d-mesh-object-the-surface-of-which-is-made-up
     float calculateSignedVolume() const;
 
     bool intersectsWith(const Ray& ray) const;

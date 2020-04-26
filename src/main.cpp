@@ -19,7 +19,8 @@ int main(int argc, char* argv[])
 
     if (argc != 5)
     {
-        conv = std::make_unique<Converter>(SupportedInputFormats::OBJ, utilities::getTestFilePath("nanosuit.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
+        conv = std::make_unique<Converter>(
+            SupportedInputFormats::OBJ, utilities::getTestFilePath("nanosuit.obj"), SupportedOutputFormats::STL, utilities::getTestFilePath("test.stl"));
     }
     else
     {
@@ -34,8 +35,7 @@ int main(int argc, char* argv[])
         {
             input = stringToInput(inputFormat);
             output = stringToOutput(outputFormat);
-        }
-        catch (const std::invalid_argument& exc)
+        } catch (const std::invalid_argument& exc)
         {
             std::cout << exc.what() << "\n";
             return -1;
@@ -47,7 +47,8 @@ int main(int argc, char* argv[])
             return -1;
         }
 
-        conv = std::make_unique<Converter>(input, utilities::getTestFilePath(inputFile + "." + inputFormat), output, utilities::getTestFilePath(outputFile + "." + outputFormat));
+        conv = std::make_unique<Converter>(
+            input, utilities::getTestFilePath(inputFile + "." + inputFormat), output, utilities::getTestFilePath(outputFile + "." + outputFormat));
     }
 
     //conv->addTranslation({ 100, 0, 100 });

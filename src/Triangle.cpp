@@ -2,8 +2,7 @@
 
 #include <iostream>
 
-namespace shaper
-{
+namespace shaper {
 
 glm::vec3 Triangle::getSurfaceNormal() const
 {
@@ -94,6 +93,6 @@ bool Triangle::intersectsWith(const Ray& ray) const
 
     // Check if the point is inside the triangle
     return glm::dot(glm::cross(m_b - m_a, p - m_a), triangleNormal) >= 0 && glm::dot(glm::cross(m_c - m_b, p - m_b), triangleNormal) >= 0
-        && glm::dot(glm::cross(m_a - m_c, p - m_c), triangleNormal) >= 0;
+           && glm::dot(glm::cross(m_a - m_c, p - m_c), triangleNormal) >= 0;
 }
-}
+}  // namespace shaper
