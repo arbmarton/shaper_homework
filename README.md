@@ -12,6 +12,8 @@ Either from command line, or by editing the source code. If used from the comman
 
 If the compiled software is ran outside of the development environment the files need to placed in the following folder relative from the .exe: ${exepath}/../testfiles/
 The software should give you error messages to the console should something go awry. (But no guarantees :))
+
+The source-code high level usage is basically creating a Converter object, and calling convert() on it. If you wish to apply geometric transformations, you should do them before calling convert(), by calling the appropriate functions on the Converter object.
   
 # How to extend
 You need to add your file format to the SupportedInputFormats and SupportedOutputFormats enums, inherit from the I_OutWriter and the I_InputParser interfaces, and override the write() and parse() functions. The error messages should guide you through the rest.
